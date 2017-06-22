@@ -15,14 +15,18 @@
  */
 package com.example.android.implicitintents;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +52,26 @@ public class MainActivity extends AppCompatActivity {
      * @param v Button that was clicked.
      */
     public void onClickOpenAddressButton(View v) {
-        // TODO (5) Store an address in a String
+        String address = "1600 Amphitheatre Parkway, CA";
+        Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder.scheme("geo")
+                .path("0,0")
+                .appendQueryParameter("q", address);
+        // .query(address);
+        showMap(uriBuilder.build());
+    }
 
-        // TODO (6) Use Uri.Builder with the appropriate scheme and query to form the Uri for the address
-
-        // TODO (7) Replace the Toast with a call to showMap, passing in the Uri from the previous step
-        Toast.makeText(this, "TODO: Open a map when this button is clicked", Toast.LENGTH_SHORT).show();
+    public static boolean openMap(Context context, String address) {
+        Uri.Builder uriBuilder = new Uri.Builder()
+                .scheme("geo")
+                .path("0,0")
+                .appendQueryParameter("q", address);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uriBuilder.build());
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -71,9 +89,8 @@ public class MainActivity extends AppCompatActivity {
      * similar to what I've done above. You can view a list of implicit Intents on the Common
      * Intents page from the developer documentation.
      *
-     * @see <http://developer.android.com/guide/components/intents-common.html/>
-     *
      * @param v Button that was clicked.
+     * @see <http://developer.android.com/guide/components/intents-common.html/>
      */
     public void createYourOwn(View v) {
         Toast.makeText(this,
@@ -111,14 +128,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void showMap(Uri mapUri) {
+        Log.d(TAG, "showMap: " + mapUri.toString());
+        // Intent intent = new Intent(Intent.ACTION_VIEW, mapUri);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(mapUri);
 
-    // TODO (1) Create a method called showMap with a Uri as the single parameter
-    // Do steps 2 - 4 within the showMap method
-        // TODO (2) Create an Intent with action type, Intent.ACTION_VIEW
-
-        // TODO (3) Set the data of the Intent to the Uri passed into this method
-
-        // TODO (4) Verify that this Intent can be launched and then call startActivity
-
-
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
 }
