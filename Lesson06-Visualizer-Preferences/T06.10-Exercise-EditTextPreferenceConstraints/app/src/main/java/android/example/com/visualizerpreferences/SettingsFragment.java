@@ -27,9 +27,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.widget.Toast;
 
-// TODO (1) Implement OnPreferenceChangeListener
 public class SettingsFragment extends PreferenceFragmentCompat implements
-        OnSharedPreferenceChangeListener {
+        OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -50,8 +49,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 String value = sharedPreferences.getString(p.getKey(), "");
                 setPreferenceSummary(p, value);
             }
+            if (p instanceof EditTextPreference) {
+                p.setOnPreferenceChangeListener(this);
+            }
         }
-        // TODO (3) Add the OnPreferenceChangeListener specifically to the EditTextPreference
     }
 
     @Override
@@ -88,10 +89,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    // TODO (2) Override onPreferenceChange. This method should try to convert the new preference value
-    // to a float; if it cannot, show a helpful error message and return false. If it can be converted
-    // to a float check that that float is between 0 (exclusive) and 3 (inclusive). If it isn't, show
-    // an error message and return false. If it is a valid number, return true.
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        try {
+            String text = (String) newValue;
+            Float textFloatValue = Float.parseFloat(text);
+            if (textFloatValue < 4 && textFloatValue > 0) {
+                return true;
+            }
+            Toast.makeText(getActivity(), R.string.invalid_size_value_out_of_range, Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), R.string.invalid_size_value_not_float, Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

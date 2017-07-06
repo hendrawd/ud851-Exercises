@@ -58,5 +58,7 @@
 
     <!-- Value in SharedPreferences for green color option -->
     <string name="pref_color_green_value" translatable="false">green</string>
+    <string name="invalid_size_value_not_float">Not a number!</string>
+    <string name="invalid_size_value_out_of_range">Value must be between 1 and 3</string>
 
 </resources>
