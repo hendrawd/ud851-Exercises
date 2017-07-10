@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -103,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * Query the mDb and get all guests from the waitlist table
      *
@@ -124,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Adds a new guest to the mDb including the party count and the current timestamp
      *
-     * @param name  Guest's name
+     * @param name      Guest's name
      * @param partySize Number in party
      * @return id of new record added
      */
@@ -136,7 +134,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // TODO (1) Create a new function called removeGuest that takes long id as input and returns a boolean
+    private boolean removeGuest(long id) {
+        return mDb.delete(WaitlistContract.WaitlistEntry.TABLE_NAME, WaitlistContract.WaitlistEntry._ID + "=" + id, null) > 0;
+    }
 
     // TODO (2) Inside, call mDb.delete to pass in the TABLE_NAME and the condition that WaitlistEntry._ID equals id
 
