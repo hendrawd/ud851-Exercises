@@ -122,3 +122,5 @@ gradle-app.setting
 #removing .idea folder
 
 .idea/
+.idea/instapk.xml
+instapk.log*
